@@ -20,9 +20,16 @@ contract Transactions {
 
     TransferStruct[] transactions;
 
-    function addToBlockchain(address payable receiver, uint amount, string memory message, string memory keyword) public {
+    function addToBlockchain(address payable receiver, uint amount, string memory message, string memory keyword) public payable {
+        require(msg.value == amount, "Sent value must match the amount parameter");
+        require(receiver != address(0), "Cannot send to zero address");
+        require(amount > 0, "Amount must be greater than 0");
+        
         transactionCount += 1;
         transactions.push(TransferStruct(msg.sender, receiver, amount, message, block.timestamp, keyword));
+
+        // Actually transfer the Ether
+        receiver.transfer(amount);
 
         emit Transfer(msg.sender, receiver, amount, message, block.timestamp, keyword);
     }

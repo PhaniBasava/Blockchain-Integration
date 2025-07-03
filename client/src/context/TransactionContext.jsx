@@ -93,7 +93,9 @@ export const TransactionsProvider = ({ children }) => {
       const accounts = await ethereum.request({ method: "eth_requestAccounts", });
 
       setCurrentAccount(accounts[0]);
-      window.location.reload();
+      
+      // Load transactions for the newly connected account
+      getAllTransactions();
     } catch (error) {
       console.log(error);
 
@@ -129,7 +131,12 @@ export const TransactionsProvider = ({ children }) => {
         const transactionsCount = await transactionsContract.getTransactionCount();
 
         setTransactionCount(transactionsCount.toNumber());
-        window.location.reload();
+        
+        // Update transactions list instead of reloading the page
+        getAllTransactions();
+        
+        // Clear form data after successful transaction
+        setformData({ addressTo: "", amount: "", keyword: "", message: "" });
       } else {
         console.log("No ethereum object");
       }
