@@ -21,6 +21,9 @@ contract Transactions {
     TransferStruct[] transactions;
 
     function addToBlockchain(address payable receiver, uint amount, string memory message, string memory keyword) public {
+        require(receiver != address(0), "Receiver address cannot be zero");
+        require(amount > 0, "Transfer amount must be greater than zero");
+
         transactionCount += 1;
         transactions.push(TransferStruct(msg.sender, receiver, amount, message, block.timestamp, keyword));
 
